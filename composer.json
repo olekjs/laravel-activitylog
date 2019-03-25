@@ -1,0 +1,19 @@
+{
+    "name": "olekjs/activity-log",
+    "type": "package",
+    "authors": [{
+        "name": "Aleksander Kaim",
+        "email": "olek_kaim@o2.pl"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Olekjs\\Activitylog\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["Olekjs\\Activitylog\\ActivitylogServiceProvider"]
+        }
+    },
+    "require": {}
+}
