@@ -28,7 +28,7 @@ class ActivityLogServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $this->app->bind('activitylog', function () {
-            return new ActivityLog();
+            return new Classes\ActivityLog();
         });
     }
 }
