@@ -107,6 +107,20 @@ class ActivityLog
     }
 
     /**
+     * Get all logs from months.
+     *
+     * @param int $value
+     * @return collection
+     */
+    public function lastMonths($value = 1)
+    {
+        $from = Carbon::today()->subMonths($value)->format('Y-m-d');
+        $to   = Carbon::today()->format('Y-m-d');
+
+        return Activity::whereBetween('created_at', [$from, $to])->get();
+    }
+
+    /**
      * Get all logs from between date.
      *
      * @param date|string $from
@@ -129,16 +143,67 @@ class ActivityLog
         return Activity::whereBetween('created_at', [$from, $to])->get();
     }
 
-    // /**
-    //  * Get users with the most activity.
-    //  *
-    //  * @param  int $value
-    //  * @return model
-    //  */
-    // public function mostActivityUsers($value = null)
-    // {
-    //     return Activity::whereBetween('created_at', [$from, $to])->get();
-    // }
+    /**
+     * Get user logs.
+     *
+     * @param  int|model $user
+     * @return collection
+     */
+    public function userLogs($user)
+    {
+        $userId;
+
+        if ($user instanceof Model) {
+            $userId = $user->id;
+        }
+
+        if (is_int($user)) {
+            $userId = $user;
+        }
+
+        return Activity::where('user_id', $userId)->get();
+    }
+
+    /**
+     * Get user logs from specific date.
+     *
+     * @param  int|model $user
+     * @param  string|array $date
+     * @return collection
+     */
+    public function userLogsWhereDate($user, $date)
+    {
+        $userId;
+
+        if ($user instanceof Model) {
+            $userId = $user->id;
+        }
+
+        if (is_int($user)) {
+            $userId = $user;
+        }
+
+        if (is_array($date)) {
+            $from = $date[0];
+            $to   = $date[1];
+
+            if (is_string($date[0])) {
+                $from = Carbon::parse($date[0]);
+            }
+
+            if (is_string($date[1])) {
+                $to = Carbon::parse($date[1]);
+            }
+
+            return Activity::whereBetween('created_at', [$from->format('Y-m-d'), $to->format('Y-m-d')])->where('user_id', $userId)->get();
+        }
+
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+
+            return Activity::whereDate('created_at', $date->format('Y-m-d'))->where('user_id', $userId)->get();
+        }
+    }
 
     /**
      * Create activitylog record in database.
